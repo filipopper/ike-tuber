@@ -54,6 +54,7 @@ def get_audio_level():
 
 # Audio detection sensitivity
 sensitivity = 0.1  # Adjust according to audio level
+min_audio_threshold = 15  # Minimum audio level to trigger movement
 
 # Parameters for angular displacement
 angular_offset = 0.5  # Minimum rotation angle
@@ -99,7 +100,7 @@ while running:
     upper_half_center_y = screen_height // 2 - jaw_base_offset * 0.5
     lower_half_center_y = screen_height // 2 + jaw_base_offset * 0.5
 
-    if jaw_base_offset > 0:
+    if jaw_base_offset > 0 and audio_level > min_audio_threshold:
         if opening_side == 1:  # Bottom side open
             lower_half_rotated = pygame.transform.rotate(lower_half, jaw_base_offset * angular_offset)
             lower_half_rect = lower_half_rotated.get_rect(center=(screen_width // 2, lower_half_center_y))
@@ -133,7 +134,7 @@ while running:
             screen.blit(upper_half_rotated, (upper_half_rect.left, upper_half_rect.top))
             screen.blit(lower_half_rotated, (lower_half_rect.left, lower_half_rect.top))
     else:
-        # Draw the halves in the correct position
+        # Draw the halves in the correct position without rotation
         screen.blit(upper_half, (upper_half_rect.left, upper_half_rect.top))
         screen.blit(lower_half, (lower_half_rect.left, lower_half_rect.top))
 
